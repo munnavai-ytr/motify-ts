@@ -120,6 +120,7 @@ function SceneRenderer({
           palette: resolvedTheme.palette,
           intensity: spec.intensity,
           sceneIndex,
+          numerals: spec.numerals,
         }}
       >
         <KitBackground

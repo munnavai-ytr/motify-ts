@@ -2,7 +2,12 @@
 
 import React, { createContext, useContext } from 'react';
 import { STYLE_DEFS, type StyleDef } from '../styles';
-import { PALETTES, type IntensityName, type KitPalette } from '../tokens';
+import {
+  PALETTES,
+  type IntensityName,
+  type KitPalette,
+  type NumeralSystem,
+} from '../tokens';
 
 export type KitElementKind =
   | 'text'
@@ -54,6 +59,7 @@ export interface KitSceneContextValue {
   palette: KitPalette;
   intensity: IntensityName;
   sceneIndex: number;
+  numerals?: NumeralSystem;
 }
 
 const DEFAULT_CONTEXT: KitSceneContextValue = {

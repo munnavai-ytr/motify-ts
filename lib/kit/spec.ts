@@ -21,6 +21,7 @@ import {
   type KitPalette,
   type LayoutVariant,
   type MoodName,
+  type NumeralSystem,
   type PaletteName,
   type PartialKitPalette,
   type StyleName,
@@ -242,6 +243,7 @@ export const VideoSpecSchema = z.object({
     .optional(),
   seed: z.number().int().min(0).max(999999).optional(),
   intensity: z.enum(['calm', 'balanced', 'energetic']).optional(),
+  numerals: z.enum(['latn', 'bn']).optional(),
   transition: z
     .enum([
       'fade',
@@ -287,6 +289,7 @@ export interface VideoSpec {
   style: StyleName;
   seed: number;
   intensity: IntensityName;
+  numerals?: NumeralSystem;
   transition?: TransitionKind;
   theme: NormalizedThemeSpec;
   scenes: NormalizedSceneSpec[];
@@ -576,6 +579,15 @@ export function normalizeVideoSpec(raw: unknown): NormalizeVideoSpecResult {
   if (rawGlobalTransition !== undefined && globalTransition === undefined) {
     warnings.push(
       `Unknown top-level transition "${String(rawGlobalTransition)}" ignored.`
+    );
+  }
+
+  const rawNumerals = parsedInput.numerals;
+  const numerals: NumeralSystem | undefined =
+    rawNumerals === 'bn' || rawNumerals === 'latn' ? rawNumerals : undefined;
+  if (rawNumerals !== undefined && numerals === undefined) {
+    warnings.push(
+      `Unknown numerals "${String(rawNumerals)}" ignored (expected "latn" or "bn").`
     );
   }
 
@@ -887,6 +899,7 @@ export function normalizeVideoSpec(raw: unknown): NormalizeVideoSpecResult {
       style: styleName,
       seed,
       intensity,
+      ...(numerals ? { numerals } : {}),
       ...(globalTransition ? { transition: globalTransition } : {}),
       theme: {
         paletteName,
@@ -1004,6 +1017,11 @@ export function getJsonSchema(): Record<string, unknown> {
       intensity: {
         type: 'STRING',
         enum: ['calm', 'balanced', 'energetic'],
+        nullable: true,
+      },
+      numerals: {
+        type: 'STRING',
+        enum: ['latn', 'bn'],
         nullable: true,
       },
       seed: { type: 'INTEGER', nullable: true },

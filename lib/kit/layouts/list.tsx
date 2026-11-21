@@ -9,7 +9,7 @@ import {
   mergeMotionStyles,
   resolveBeatDelay,
 } from '../anim';
-import { KitIcon, KitStack, KitText } from '../elements';
+import { KitIcon, KitStack, KitText, useKitSceneContext } from '../elements';
 import {
   SAFE_AREAS,
   containsBengali,
@@ -81,9 +81,13 @@ export function ListLayout({
       ? items
       : [{ title: 'Fast setup' }, { title: 'Clean motion' }, { title: 'Sharp export' }];
 
-  const useBengaliNums = containsBengali(
-    `${title} ${effectiveItems.map((i) => i.title).join(' ')}`
-  );
+  const sceneCtx = useKitSceneContext();
+  const useBengaliNums =
+    sceneCtx.numerals === 'bn'
+      ? true
+      : sceneCtx.numerals === 'latn'
+        ? false
+        : containsBengali(`${title} ${effectiveItems.map((i) => i.title).join(' ')}`);
 
   const variant = motion.variant ?? 'a';
   const entranceFrame = frame + motion.preRollFrames;

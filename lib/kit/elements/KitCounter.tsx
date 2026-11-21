@@ -96,6 +96,14 @@ export function KitCounter({
 
   const motionStyle = mergeMotionStyles(entrance, exit);
 
+  const sceneCtx = useKitSceneContext();
+  const useBengaliDigits =
+    sceneCtx.numerals === 'bn'
+      ? true
+      : sceneCtx.numerals === 'latn'
+        ? false
+        : bengaliDigits;
+
   const currentVal = from + (to - from) * progress;
   const formattedNumber =
     decimals > 0
@@ -103,7 +111,7 @@ export function KitCounter({
       : Math.round(currentVal).toLocaleString('en-US');
 
   const combined = `${prefix}${formattedNumber}${suffix}`;
-  const localized = formatLocalizedDigits(combined, bengaliDigits);
+  const localized = formatLocalizedDigits(combined, useBengaliDigits);
 
   // Measure target final string so fontSize stays constant and never overflows ring/container
   let resolvedFontSize = fontSize;
@@ -112,7 +120,7 @@ export function KitCounter({
       decimals > 0 ? to.toFixed(decimals) : Math.round(to).toLocaleString('en-US');
     const maxSample = formatLocalizedDigits(
       `${prefix}${finalNumber}${suffix}`,
-      bengaliDigits
+      useBengaliDigits
     );
     const fitRes = fitText({
       text: maxSample,

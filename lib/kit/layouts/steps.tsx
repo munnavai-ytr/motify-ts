@@ -9,7 +9,7 @@ import {
   mergeMotionStyles,
   resolveBeatDelay,
 } from '../anim';
-import { KitStack, KitText } from '../elements';
+import { KitStack, KitText, useKitSceneContext } from '../elements';
 import {
   SAFE_AREAS,
   containsBengali,
@@ -79,9 +79,13 @@ export function StepsLayout({
 
   const heading = readSlotString(slots, 'heading', 'How it works');
   const items = readStepItems(slots);
-  const useBn = containsBengali(
-    `${heading} ${items.map((i) => i.title).join(' ')}`
-  );
+  const sceneCtx = useKitSceneContext();
+  const useBn =
+    sceneCtx.numerals === 'bn'
+      ? true
+      : sceneCtx.numerals === 'latn'
+        ? false
+        : containsBengali(`${heading} ${items.map((i) => i.title).join(' ')}`);
 
   const variant = motion.variant === 'b' ? 'b' : 'a';
   const entranceFrame = frame + motion.preRollFrames;

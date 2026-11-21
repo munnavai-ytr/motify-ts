@@ -23,6 +23,8 @@ export type StyleName =
 
 export type IntensityName = 'calm' | 'balanced' | 'energetic';
 
+export type NumeralSystem = 'latn' | 'bn';
+
 export type LayoutVariant = 'a' | 'b' | 'c';
 
 export type TransitionKind =

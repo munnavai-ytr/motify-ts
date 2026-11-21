@@ -14,3 +14,7 @@ export * from './audit/audit';
 export * from './audit/autofix';
 export * from './poster';
 export * from './render';
+export * from './director/prompt';
+export * from './director/generate';
+export * from './director/tests';
+export * from './director/variety';

@@ -7,7 +7,7 @@ import {
   computeProgress,
   resolveBeatDelay,
 } from '../anim';
-import { KitStack, KitText, kitAttrs } from '../elements';
+import { KitStack, KitText, kitAttrs, useKitSceneContext } from '../elements';
 import {
   SAFE_AREAS,
   containsBengali,
@@ -88,9 +88,13 @@ export function BarsLayout({
   const heading = readSlotString(slots, 'heading', 'Key Metrics');
   const data = readBarData(slots);
   const maxVal = Math.max(1, ...data.map((d) => d.value));
-  const useBn = containsBengali(
-    `${heading} ${data.map((d) => d.label).join(' ')}`
-  );
+  const sceneCtx = useKitSceneContext();
+  const useBn =
+    sceneCtx.numerals === 'bn'
+      ? true
+      : sceneCtx.numerals === 'latn'
+        ? false
+        : containsBengali(`${heading} ${data.map((d) => d.label).join(' ')}`);
 
   const variant = motion.variant === 'b' ? 'b' : 'a';
   const entranceFrame = frame + motion.preRollFrames;

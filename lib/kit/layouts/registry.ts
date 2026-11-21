@@ -1,5 +1,5 @@
 import { KIT_ICON_NAMES } from '../elements';
-import { STYLE_DEFS } from '../styles';
+import { STYLE_DEFS, describeStylesForAI } from '../styles';
 import { MOODS, PALETTES } from '../tokens';
 import { BarsLayout } from './bars';
 import { BrandLayout } from './brand';
@@ -615,8 +615,9 @@ export function getAllLayouts(): LayoutDefinition[] {
   return Array.from(LAYOUT_REGISTRY.values());
 }
 
+export { describeStylesForAI };
+
 export function describeKitForAI(): string {
-  const styleList = Object.keys(STYLE_DEFS).join(', ');
   const paletteList = Object.keys(PALETTES).join(', ');
   const moodList = Object.keys(MOODS).join(', ');
   const iconList = KIT_ICON_NAMES.join(', ');
@@ -624,7 +625,7 @@ export function describeKitForAI(): string {
     const slotDesc = layout.slots
       .map(
         (s) =>
-          `${s.name}${s.required ? '*' : ''} (${s.type}${s.maxChars ? `, <=${s.maxChars}c` : ''})`
+          `${s.name}${s.required ? '*' : ''} (${s.type}${s.maxChars ? `, <=${s.maxChars}c` : ''}${s.maxItems ? `, <=${s.maxItems} items` : ''})`
       )
       .join(', ');
     return `- ${layout.name} [variants: ${layout.variants.join('|')}]: ${layout.description} Slots: ${slotDesc}`;
@@ -633,11 +634,13 @@ export function describeKitForAI(): string {
   return [
     'MOTION KIT SPECIFICATION GUIDE',
     `Formats: "9:16" (1080x1920), "16:9" (1920x1080), "1:1" (1080x1080) @ 30fps`,
-    `Styles (top-level "style"): ${styleList}`,
+    `Styles (top-level "style"): ${Object.keys(STYLE_DEFS).join(', ')}`,
+    describeStylesForAI(),
     `Intensities (top-level "intensity"): calm, balanced, energetic`,
-    `Palettes: ${paletteList}`,
+    `Numerals (top-level "numerals"): "latn" (default), "bn" (Bengali digits)`,
+    `Palettes: ${paletteList} (or theme.customPalette { bg, accent, surface?, text?, muted?, accent2? })`,
     `Moods: ${moodList}`,
-    `Text highlight markup: wrap [[key phrase]] inside headlines/titles/quotes for style-driven marker/underline/box/color accents.`,
+    `Text highlight markup: wrap [[key phrase]] inside headlines/titles/quotes (max 1-2 key words per headline).`,
     `Backgrounds (bg): solid, linear, radial, grid, dots, shapes, chroma (#00FF00), mesh-glow, aurora, stripes, dots-grid, rings, color-blocks, waves, confetti, sparkles, lines-sweep, paper`,
     `Transitions (scene.transition): fade, push-left, push-right, push-up, wipe-left, wipe-up, circle-reveal, zoom-through, color-block, cut`,
     `Camera (scene.camera): push-in, pull-out, pan-left, pan-right, none`,

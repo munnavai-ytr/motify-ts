@@ -298,3 +298,18 @@ export function getStyleCardBorder(
       : hexToRgba(accentHex, 0.36);
   return `${style.borderWidth}px solid ${color}`;
 }
+
+export function describeStylesForAI(): string {
+  const lines = STYLE_NAMES.map((name) => {
+    const s = STYLE_DEFS[name];
+    return [
+      `- ${s.name} ("${s.label}"): ${s.description}`,
+      `  font=${s.titleFontRole}/${s.bodyFontRole}, highlight=${s.highlightStyle}, border=${s.borderMode}, shadow=${s.shadowMode}`,
+      `  defaultPalette=${s.defaultPalette}, defaultMood=${s.defaultMood}`,
+      `  bgRecipes=[${s.bgRecipes.join(', ')}], transitions=[${s.transitions.join(', ')}], cameras=[${s.cameras.join(', ')}]`,
+      `  cutSec(calm/bal/fast)=${s.cutDurationSec.calm}/${s.cutDurationSec.balanced}/${s.cutDurationSec.energetic}s`,
+    ].join('\n');
+  });
+  return ['Visual Styles (top-level "style"):', ...lines].join('\n');
+}
+
